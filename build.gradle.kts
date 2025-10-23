@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.codetwister"
-version = "1.0.0"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -26,8 +26,8 @@ publishOnCentral {
     projectDescription.set("A minimalistic dependency injection library for Kotlin.")
     // The following values are the default, if they are ok with you, just omit them
     projectLongName.set("injeKtion")
-    licenseName.set("Gnu General Public License v3.0")
-    licenseUrl.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+    licenseName.set("MIT")
+    licenseUrl.set("https://opensource.org/license/mit")
     projectUrl.set("https://github.com/${repoOwner.get()}/InjeKtion")
     scmConnection.set("scm:git:https://github.com/${repoOwner.get()}/InjeKtion")
 }
