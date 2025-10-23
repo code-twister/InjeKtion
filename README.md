@@ -2,6 +2,37 @@
 
 Minimalistic Dependency Injection Library for Kotlin
 
+## Gradle Dependency
+
+### using classic gradle fomat
+```gradle
+dependencies {
+    ...
+    implementation("dev.codetwister:injeKtion:1.0.1")
+    ...
+}
+```
+
+### using version catalog
+
+**/gradle/libs.versions.toml**
+```toml
+[versions]
+injeKtionVersion = "1.0.1"
+
+[libraries]
+injeKtion = { module = "dev.codetwister:injeKtion", version.ref = "injeKtionVersion" }
+```
+
+**/module/build.gradle.kts**
+```gradle
+dependencies {
+    ...
+    implementation(libs.injeKtion)
+    ...
+}
+```
+
 ## Features
 
 **Creating bindings:**
