@@ -4,7 +4,7 @@ Minimalistic Dependency Injection Library for Kotlin
 
 ## Gradle Dependency
 
-### using classic gradle fomat
+### using classic gradle format
 ```gradle
 dependencies {
     ...
@@ -48,13 +48,21 @@ single(named = "specialString") { "Something special" }
 
 ```kotlin
 class SomeClass {
-   private val dependency_one by inject<MyInterface>(named = "specialName")
-   private val dependency_two: OtherInterface by inject()
+   private val dependencyOne by inject<MyInterface>(named = "specialName")
+   private val dependencyTwo: OtherInterface by inject()
    private val anotherClass by inject<AnotherClass>()
    private val test: String by inject(named = "specialString")
    // ...
 }
 ```
+
+## Scopes
+
+By default, the injeKtion library works with a default "global" scope. 
+What this means singletons will be held in this scope and never get cleaned up (basically static), 
+unless you call `GlobalInjeKtionScope.clear()`
+
+// TODO add more documentation on how scopes work
 
 ## Article
 

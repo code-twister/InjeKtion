@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "dev.codetwister"
-version = "1.0.1"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    testImplementation("org.amshove.kluent:kluent:1.73")
 }
 
 tasks.test {
