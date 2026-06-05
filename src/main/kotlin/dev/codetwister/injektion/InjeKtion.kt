@@ -17,8 +17,6 @@ package dev.codetwister.injektion
  * }
  * ```
  */
-object InjeKtion
-
 /**
  * Property delegate to inject dependencies.
  */
@@ -43,7 +41,5 @@ inline fun <reified T: Any> single(named: String? = null, noinline block: () -> 
 fun createInjeKtionScope(named: String, initialize: InjeKtionScope.() -> Unit): InjeKtionScope =
     GlobalInjeKtionScope.createInjeKtionScope(named, initialize)
 
-fun scoped(name: String): InjeKtionScope {
-    // find the injection scope
-    TODO("Not yet implemented")
-}
+fun scoped(name: String): InjeKtionScope =
+    GlobalInjeKtionScope.findScopeRecursive(name) ?: throw IllegalStateException("Scope $name not found")

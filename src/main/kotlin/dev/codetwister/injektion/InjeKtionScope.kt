@@ -6,6 +6,7 @@ import kotlin.reflect.KProperty
 
 sealed class InjeKtionScope {
     val factories = mutableMapOf<Pair<KClass<out Any>, String?>, () -> Any>()
+    val childScopes = mutableMapOf<String, InjeKtionScope>()
 
     inline fun <reified T: Any> inject(named: String? = null) =
         object: ReadOnlyProperty<Any, T> {
@@ -50,11 +51,24 @@ sealed class InjeKtionScope {
             name = name,
         ).also {
             initialize()
+            childScopes[name] = it
         }
     }
 
     fun clear() {
         factories.clear()
+        childScopes.values.forEach { it.clear() }
+        childScopes.clear()
+    }
+
+    fun findScopeRecursive(name: String): InjeKtionScope? {
+        val scope = childScopes[name]
+        if (scope != null) return scope
+
+        childScopes.values.forEach { scope ->
+            scope.findScopeRecursive(name)?.let { return it }
+        }
+        return null
     }
 }
 
