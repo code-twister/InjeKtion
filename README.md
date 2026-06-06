@@ -2,9 +2,11 @@
 
 Minimalistic Dependency Injection Library for Kotlin
 
+[CHANGELOG.md](docs/CHANGELOG.md)
+
 ## Gradle Dependency
 
-### using classic gradle format
+### using classic Gradle format
 ```gradle
 dependencies {
     ...
@@ -18,7 +20,7 @@ dependencies {
 **/gradle/libs.versions.toml**
 ```toml
 [versions]
-injeKtionVersion = "1.0.1"
+injeKtionVersion = "1.1.0"
 
 [libraries]
 injeKtion = { module = "dev.codetwister:injeKtion", version.ref = "injeKtionVersion" }
@@ -56,13 +58,24 @@ class SomeClass {
 }
 ```
 
-## Scopes
+**Using scopes:**
 
-By default, the injeKtion library works with a default "global" scope. 
-What this means singletons will be held in this scope and never get cleaned up (basically static), 
-unless you call `GlobalInjeKtionScope.clear()`
+Detailed information here: [ScopedInjection.md](docs/ScopedInjection.md)
 
-// TODO add more documentation on how scopes work
+```kotlin
+val myScope = createInjeKtionScope("MyScope") {
+    single { MyScopedService() }
+    factory { MyScopedFactory() }
+}
+
+class SomeClass {
+    private val dependencyOne by scoped("MyScope").inject<MyScopedService>()
+}
+// or
+class OtherClass(scope: InjeKtionScope) {
+    private val dependencyOne by scope.inject<MyScopedService>()
+}
+```
 
 ## Article
 
