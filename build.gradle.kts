@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.2.10"
     id ("org.danilopianini.publish-on-central") version "9.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "dev.codetwister"
@@ -17,6 +18,10 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.check {
+    dependsOn("detekt")
 }
 kotlin {
     jvmToolchain(21)

@@ -67,7 +67,7 @@ class TestInjeKtionScoped {
 
     @Test
     fun `check scope isolation`() {
-        val scopeA = createInjeKtionScope("ScopeA") {
+        createInjeKtionScope("ScopeA") {
             factory { TestInjected("A") }
         }
         val scopeB = createInjeKtionScope("ScopeB") { }
