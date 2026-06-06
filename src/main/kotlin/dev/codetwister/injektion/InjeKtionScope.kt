@@ -10,8 +10,8 @@ sealed class InjeKtionScope(
     val factories = mutableMapOf<Pair<KClass<out Any>, String?>, () -> Any>()
     val childScopes = mutableMapOf<String, InjeKtionScope>()
 
-    inline fun <reified T: Any> inject(named: String? = null) =
-        object: ReadOnlyProperty<Any, T> {
+    inline fun <reified T : Any> inject(named: String? = null) =
+        object : ReadOnlyProperty<Any, T> {
             private val value: T by lazy {
                 @Suppress("UNCHECKED_CAST")
                 this@InjeKtionScope.getFactoryRecursive(T::class to named).invoke() as T
@@ -24,7 +24,7 @@ sealed class InjeKtionScope(
             ?: (this as? InjeKtionScopeNamed)
                 ?.parent
                 ?.getFactoryRecursive(key)
-            ?: throw IllegalStateException("No factory found for $key")
+            ?: error("No factory found for $key")
     }
 
     /**
@@ -33,7 +33,7 @@ sealed class InjeKtionScope(
      * @param named Optional name to distinguish between multiple factories of the same type.
      * @param block Lambda that creates an instance of [T].
      */
-    inline fun <reified T: Any> factory(named: String? = null, noinline block: () -> T) {
+    inline fun <reified T : Any> factory(named: String? = null, noinline block: () -> T) {
         factories[T::class to named] = block
     }
 
@@ -43,7 +43,7 @@ sealed class InjeKtionScope(
      * @param named Optional name to distinguish between multiple singletons of the same type.
      * @param block Lambda that creates an instance of [T].
      */
-    inline fun <reified T: Any> single(named: String? = null, noinline block: () -> T) {
+    inline fun <reified T : Any> single(named: String? = null, noinline block: () -> T) {
         block.invoke().let { factory(named) { it } }
     }
 
@@ -63,15 +63,8 @@ sealed class InjeKtionScope(
         childScopes.clear()
     }
 
-    fun findScopeRecursive(name: String): InjeKtionScope? {
-        val scope = childScopes[name]
-        if (scope != null) return scope
-
-        childScopes.values.forEach { scope ->
-            scope.findScopeRecursive(name)?.let { return it }
-        }
-        return null
-    }
+    fun findScopeRecursive(name: String): InjeKtionScope? =
+        childScopes[name] ?: childScopes.values.firstNotNullOfOrNull { it.findScopeRecursive(name) }
 }
 
 object GlobalInjeKtionScope : InjeKtionScope("GlobalScope")

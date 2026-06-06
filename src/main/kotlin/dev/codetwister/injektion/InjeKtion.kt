@@ -20,7 +20,8 @@ package dev.codetwister.injektion
 /**
  * Property delegate to inject dependencies.
  */
-inline fun <reified T: Any> inject(named: String? = null) = GlobalInjeKtionScope.inject<T>(named)
+inline fun <reified T : Any> inject(named: String? = null) =
+    GlobalInjeKtionScope.inject<T>(named)
 
 /**
  * Register a factory for creating instances of type [T].
@@ -28,7 +29,8 @@ inline fun <reified T: Any> inject(named: String? = null) = GlobalInjeKtionScope
  * @param named Optional name to distinguish between multiple factories of the same type.
  * @param block Lambda that creates an instance of [T].
  */
-inline fun <reified T: Any> factory(named: String? = null, noinline block: () -> T) = GlobalInjeKtionScope.factory(named, block)
+inline fun <reified T : Any> factory(named: String? = null, noinline block: () -> T) =
+    GlobalInjeKtionScope.factory(named, block)
 
 /**
  * Register a singleton instance of type [T].
@@ -36,10 +38,11 @@ inline fun <reified T: Any> factory(named: String? = null, noinline block: () ->
  * @param named Optional name to distinguish between multiple singletons of the same type.
  * @param block Lambda that creates an instance of [T].
  */
-inline fun <reified T: Any> single(named: String? = null, noinline block: () -> T) = GlobalInjeKtionScope.single(named, block)
+inline fun <reified T : Any> single(named: String? = null, noinline block: () -> T) =
+    GlobalInjeKtionScope.single(named, block)
 
 fun createInjeKtionScope(named: String, initialize: InjeKtionScope.() -> Unit): InjeKtionScope =
     GlobalInjeKtionScope.createInjeKtionScope(named, initialize)
 
 fun scoped(name: String): InjeKtionScope =
-    GlobalInjeKtionScope.findScopeRecursive(name) ?: throw IllegalStateException("Scope $name not found")
+    GlobalInjeKtionScope.findScopeRecursive(name) ?: error("Scope $name not found")
