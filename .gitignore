@@ -41,5 +41,8 @@ bin/
 ### VS Code ###
 .vscode/
 
+### Junie ###
+.junie/
+
 ### Mac OS ###
 .DS_Store

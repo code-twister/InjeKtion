@@ -2,9 +2,11 @@
 
 Minimalistic Dependency Injection Library for Kotlin
 
+[CHANGELOG.md](docs/CHANGELOG.md)
+
 ## Gradle Dependency
 
-### using classic gradle fomat
+### using classic Gradle format
 ```gradle
 dependencies {
     ...
@@ -18,7 +20,7 @@ dependencies {
 **/gradle/libs.versions.toml**
 ```toml
 [versions]
-injeKtionVersion = "1.0.1"
+injeKtionVersion = "1.1.0"
 
 [libraries]
 injeKtion = { module = "dev.codetwister:injeKtion", version.ref = "injeKtionVersion" }
@@ -48,11 +50,30 @@ single(named = "specialString") { "Something special" }
 
 ```kotlin
 class SomeClass {
-   private val dependency_one by inject<MyInterface>(named = "specialName")
-   private val dependency_two: OtherInterface by inject()
+   private val dependencyOne by inject<MyInterface>(named = "specialName")
+   private val dependencyTwo: OtherInterface by inject()
    private val anotherClass by inject<AnotherClass>()
    private val test: String by inject(named = "specialString")
    // ...
+}
+```
+
+**Using scopes:**
+
+Detailed information here: [ScopedInjection.md](docs/ScopedInjection.md)
+
+```kotlin
+val myScope = createInjeKtionScope("MyScope") {
+    single { MyScopedService() }
+    factory { MyScopedFactory() }
+}
+
+class SomeClass {
+    private val dependencyOne by scoped("MyScope").inject<MyScopedService>()
+}
+// or
+class OtherClass(scope: InjeKtionScope) {
+    private val dependencyOne by scope.inject<MyScopedService>()
 }
 ```
 

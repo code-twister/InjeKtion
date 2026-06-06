@@ -1,10 +1,5 @@
 package dev.codetwister.injektion
 
-import dev.codetwister.injektion.InjeKtion.factories
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-
 /** A simple dependency injection framework for Kotlin.
  *
  * Usage:
@@ -22,21 +17,10 @@ import kotlin.reflect.KProperty
  * }
  * ```
  */
-object InjeKtion {
-    val factories = mutableMapOf<Pair<KClass<out Any>, String?>, () -> Any>()
-}
-
 /**
  * Property delegate to inject dependencies.
  */
-inline fun <reified T: Any> inject(named: String? = null) =
-    object: ReadOnlyProperty<Any, T> {
-        private val value: T by lazy {
-            @Suppress("UNCHECKED_CAST")
-            factories.getValue(T::class to named).invoke() as T
-        }
-        override fun getValue(thisRef: Any, property: KProperty<*>): T = value
-    }
+inline fun <reified T: Any> inject(named: String? = null) = GlobalInjeKtionScope.inject<T>(named)
 
 /**
  * Register a factory for creating instances of type [T].
@@ -44,9 +28,7 @@ inline fun <reified T: Any> inject(named: String? = null) =
  * @param named Optional name to distinguish between multiple factories of the same type.
  * @param block Lambda that creates an instance of [T].
  */
-inline fun <reified T: Any> factory(named: String? = null, noinline block: () -> T) {
-    factories[T::class to named] = block
-}
+inline fun <reified T: Any> factory(named: String? = null, noinline block: () -> T) = GlobalInjeKtionScope.factory(named, block)
 
 /**
  * Register a singleton instance of type [T].
@@ -54,6 +36,10 @@ inline fun <reified T: Any> factory(named: String? = null, noinline block: () ->
  * @param named Optional name to distinguish between multiple singletons of the same type.
  * @param block Lambda that creates an instance of [T].
  */
-inline fun <reified T: Any> single(named: String? = null, noinline block: () -> T) {
-    block.invoke().let { factory(named) { it } }
-}
+inline fun <reified T: Any> single(named: String? = null, noinline block: () -> T) = GlobalInjeKtionScope.single(named, block)
+
+fun createInjeKtionScope(named: String, initialize: InjeKtionScope.() -> Unit): InjeKtionScope =
+    GlobalInjeKtionScope.createInjeKtionScope(named, initialize)
+
+fun scoped(name: String): InjeKtionScope =
+    GlobalInjeKtionScope.findScopeRecursive(name) ?: throw IllegalStateException("Scope $name not found")
