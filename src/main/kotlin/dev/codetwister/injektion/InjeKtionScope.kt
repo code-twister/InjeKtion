@@ -14,12 +14,12 @@ sealed class InjeKtionScope(
         object: ReadOnlyProperty<Any, T> {
             private val value: T by lazy {
                 @Suppress("UNCHECKED_CAST")
-                factories.getValue(T::class to named).invoke() as T
+                this@InjeKtionScope.getFactoryRecursive(T::class to named).invoke() as T
             }
             override fun getValue(thisRef: Any, property: KProperty<*>): T = value
         }
 
-    internal fun getFactoryRecursive(key: Pair<KClass<out Any>, String?>): () -> Any {
+    fun getFactoryRecursive(key: Pair<KClass<out Any>, String?>): () -> Any {
         return factories[key]
             ?: (this as? InjeKtionScopeNamed)
                 ?.parent
