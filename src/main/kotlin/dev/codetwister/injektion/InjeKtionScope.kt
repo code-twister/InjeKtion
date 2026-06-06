@@ -4,7 +4,9 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-sealed class InjeKtionScope {
+sealed class InjeKtionScope(
+    open val name: String,
+) {
     val factories = mutableMapOf<Pair<KClass<out Any>, String?>, () -> Any>()
     val childScopes = mutableMapOf<String, InjeKtionScope>()
 
@@ -50,7 +52,7 @@ sealed class InjeKtionScope {
             parent = this,
             name = name,
         ).also {
-            initialize()
+            it.initialize()
             childScopes[name] = it
         }
     }
@@ -72,9 +74,9 @@ sealed class InjeKtionScope {
     }
 }
 
-object GlobalInjeKtionScope : InjeKtionScope()
+object GlobalInjeKtionScope : InjeKtionScope("GlobalScope")
 
 internal data class InjeKtionScopeNamed(
-    val name: String,
+    override val name: String,
     val parent: InjeKtionScope = GlobalInjeKtionScope,
-) : InjeKtionScope()
+) : InjeKtionScope(name)

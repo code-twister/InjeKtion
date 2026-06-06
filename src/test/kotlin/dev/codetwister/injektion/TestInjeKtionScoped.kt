@@ -1,5 +1,6 @@
 package dev.codetwister.injektion
 
+import dev.codetwister.injektion.testdata.TestInjected
 import org.junit.jupiter.api.Test
 
 class TestInjeKtionScoped {
@@ -7,27 +8,23 @@ class TestInjeKtionScoped {
     @Test
     fun test() {
         // top level
-        single {
-
+        factory("n1") { TestInjected(param = "1") }
+        factory("n2") { TestInjected(param = "2") }
+        factory("n3") { TestInjected(param = "3") }
+        factory("n4") { TestInjected(param = "4") }
+        val sessionScope = createInjeKtionScope("UserSessionScope") {
+            factory("n1") { TestInjected(param = "1") }
+            factory("n2") { TestInjected(param = "2") }
         }
-        factory {
-
+        val viewModelScope1 = scoped("UserSessionScope").createInjeKtionScope("viewModel1") {
+            factory("n1") { TestInjected(param = "1") }
+            factory("n2") { TestInjected(param = "2") }
+            factory("n3") { TestInjected(param = "3") }
         }
-        val injectionScope1 = createInjeKtionScope("scopeName1") {
-            factory {
-
-            }
-            single {
-
-            }
+        val viewModelScope2 = scoped("UserSessionScope").createInjeKtionScope("viewModel2") {
+            factory("n1") { TestInjected(param = "1") }
         }
-        val injectionScope2 = injectionScope1.createInjeKtionScope("scopeName2") {
-            factory {
 
-            }
-            single {
-
-            }
-        }
+        GlobalInjeKtionScope.printRecursive()
     }
 }
